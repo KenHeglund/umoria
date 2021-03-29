@@ -13,6 +13,10 @@
 
 static bool parseGameSeed(const char *argv, uint32_t &seed);
 
+#ifdef XCODE_DEBUG
+bool prepare_stdin_for_debugger(int timeout_ms);
+#endif
+
 static const char *usage_instructions = R"(
 Usage:
     umoria [OPTIONS] SAVEGAME
@@ -30,6 +34,11 @@ Options:
 
 // Initialize, restore, and get the ball rolling. -RAK-
 int main(int argc, char *argv[]) {
+#ifdef XCODE_DEBUG
+    if (!prepare_stdin_for_debugger(700)) {
+        return 1;
+    }
+#endif
     uint32_t seed = 0;
     bool new_game = false;
 
@@ -118,3 +127,27 @@ static bool parseGameSeed(const char *argv, uint32_t &seed) {
 
     return true;
 }
+
+#ifdef XCODE_DEBUG
+// Workaround for allowing the debugger to reliably attach to the umoria process when launched from Xcode.
+// https://stackoverflow.com/a/31971610
+bool prepare_stdin_for_debugger(int timeout_ms)
+{
+    fd_set fd_stdin;
+    FD_ZERO(&fd_stdin);
+    FD_SET(STDIN_FILENO, &fd_stdin);
+    struct timespec timeout = { timeout_ms / 1000, (timeout_ms % 1000) * 1000000 };
+    
+    do {
+        errno = 0;
+    }
+    while (pselect(STDIN_FILENO + 1, &fd_stdin, NULL, NULL, &timeout, NULL) < 0 && errno == EINTR);
+    
+    if (errno != 0) {
+        fprintf(stderr, "Unexpected error %d", errno);
+        return false;
+    }
+    
+    return true;
+}
+#endif

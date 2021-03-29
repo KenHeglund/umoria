@@ -69,7 +69,7 @@ dkms.conf
 *.cbp
 
 # build directories
-umoria.xcodeproj
+# umoria.xcodeproj
 nbproject
 umoria
 
