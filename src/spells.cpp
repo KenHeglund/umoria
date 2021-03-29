@@ -22,7 +22,7 @@ static bool spellGetId(int *spell_ids, int number_of_choices, int &spell_id, int
 
     int offset = (classes[py.misc.class_id].class_to_use_mage_spells == config::spells::SPELL_TYPE_MAGE ? config::spells::NAME_OFFSET_SPELLS : config::spells::NAME_OFFSET_PRAYERS);
 
-    char choice;
+    char choice = '\0';
 
     while (!spell_found && getCommand(str, choice)) {
         if (isupper((int) choice) != 0) {
