@@ -97,8 +97,8 @@ static void dungeonPlaceBoundaryWalls() {
 
     for (int i = 0; i < dg.height; i++) {
 #ifdef DEBUG
-        assert((Tile_t *) left_ptr == &floor[i][0]);
-        assert((Tile_t *) right_ptr == &floor[i][dg.width - 1]);
+        assert((Tile_t *) left_ptr == &dg.floor[i][0]);
+        assert((Tile_t *) right_ptr == &dg.floor[i][dg.width - 1]);
 #endif
 
         ((Tile_t *) left_ptr)->feature_id = TILE_BOUNDARY_WALL;
@@ -114,8 +114,8 @@ static void dungeonPlaceBoundaryWalls() {
 
     for (int i = 0; i < dg.width; i++) {
 #ifdef DEBUG
-        assert(top_ptr == &floor[0][i]);
-        assert(bottom_ptr == &floor[dg.height - 1][i]);
+        assert(top_ptr == &dg.floor[0][i]);
+        assert(bottom_ptr == &dg.floor[dg.height - 1][i]);
 #endif
         top_ptr->feature_id = TILE_BOUNDARY_WALL;
         top_ptr++;
